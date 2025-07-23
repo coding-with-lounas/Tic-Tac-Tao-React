@@ -24,7 +24,7 @@ export default function board() {
   const [squares, setSquares ] = useState(Array(9).fill(null));
   
   function handleClick(i){ 
-    if (squares[i]){
+    if (squares[i] || calculateWinner(squares)){
       return;
     }
      const squaredNext =squares.slice();
@@ -59,6 +59,7 @@ export default function board() {
     </>
   );
 }
+
 function calculateWinner(){
   const lines = [
     [0, 1, 2],
