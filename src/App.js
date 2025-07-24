@@ -7,9 +7,7 @@ function Square({value , onSquareClick}) {
 
   // function handleClick() {
   //     setValue('x');
-  // }
-
-
+  // }    status = "Next player: " + (xIsNext ? "X" : "O");
   return (
   <>
           <button className="square" onClick={onSquareClick}>{value}</button>
@@ -18,27 +16,38 @@ function Square({value , onSquareClick}) {
   );
 }
 
-export default function board() {
+ function board(xIsNext,squares,onPlay) {
+
+  // const [xIsNext,setXIsNext]=useState(true);
+  // const [squares, setSquares ] = useState(Array(9).fill(null));
   
-  const [xIsNext,setXIsNext]=useState(true)
-  const [squares, setSquares ] = useState(Array(9).fill(null));
-  
-  function handleClick(i){ 
+  function handleClick(i){  
+   
     if (squares[i] || calculateWinner(squares)){
       return;
     }
-     const squaredNext =squares.slice();
+    const nextSquares =squares.slice();
      if (xIsNext){
-     squaredNext[i]='X';
+     nextSquares[i]='X';
     }else{
-      squaredNext[i]='O';
+      nextSquares[i]='O';
     }
-     setSquares(squaredNext);
-     setXIsNext(!xIsNext);
+    //  setSquares(nextsquares);
+    //  setXIsNext(!xIsNext);
+    onPlay(nextSquares)
+  }
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status='winner :'+winner;
+  } else {
+    status='The next player is :'+ (xIsNext ? 'X' : 'O');
   }
 
   return (
  <>
+      <div className='status'>{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -60,7 +69,7 @@ export default function board() {
   );
 }
 
-function calculateWinner(){
+function calculateWinner(squares){
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -80,3 +89,23 @@ function calculateWinner(){
   return null;
 
 }
+export default function Game(){
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  currentSquare =history[history.length-1];
+  function handlePlay(nextSquare){
+
+  }
+  return (
+    <>
+      <div>
+        <div className='game-board'>
+          <board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay} />
+        </div>
+        <div className='game-info'>
+         <ol>  </ol>
+        </div>
+      </div>
+    </>
+  );
+} 
