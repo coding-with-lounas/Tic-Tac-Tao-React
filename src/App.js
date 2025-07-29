@@ -16,7 +16,7 @@ function Square({value , onSquareClick}) {
   );
 }
 
- function board(xIsNext,squares,onPlay) {
+ function Board({xIsNext,squares,onPlay}) {
 
   // const [xIsNext,setXIsNext]=useState(true);
   // const [squares, setSquares ] = useState(Array(9).fill(null));
@@ -50,6 +50,8 @@ function Square({value , onSquareClick}) {
       <div className='status'>{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+         {/* why don't use `onSquareClick={handleClick(0)}` it's run when we renderring the compenent because 
+         you're not passing function u're passing result of function */}    
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
         <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
@@ -91,22 +93,50 @@ function calculateWinner(squares){
 }
 export default function Game(){
   const [xIsNext, setXIsNext] = useState(true);
-  const [history, setHistory] = useState([Array(9).fill(null)]);
-  
-  currentSquare =history[history.length-1];
+  const [currentMove,setCurrentMove]=useState(0);
+  const [history, setHistory] = useState([Array(9).fill(null)]); // history is array embedded array like [[]]
+  const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquare){
-     setHistory([...history,nextSquare]);
-     setXIsNext(!xIsNext);
+  // const currentSquare =history[history.length - 1];
+// because the history.length give u length of history array and array in js start with index 0
+
+  function handlePlay(nextSquares){
+    //  setHistory([...history,nextSquare]);
+    //  setXIsNext(!xIsNext);
+    const nextHistory= [...history.slice(0,currentMove+1),nextsquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+    setXIsNext(!xIsNext);
   }
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
+    setXIsNext(nextMove % 2 === 0);
+  }
+ const moves =history.map((squares,move)=>{
+  let description ;
+  if(move>0){
+    description= 'go to move #'+ move ;
+  }else{
+    description= 'Go to game start';
+  } 
+  
+  return(
+    <li key={move} >
+    <button onClick={()=>jumpTo(move)}>{description}</button>
+    </li>
+  );
+});
+
   return (
     <>
-      <div>
+      <div className='game'>
         <div className='game-board'>
-          <board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay} />
+          <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay} />
         </div>
         <div className='game-info'>
-         <ol>  </ol>
+         <ol> 
+          {moves}
+          </ol>
         </div>
       </div>
     </>
