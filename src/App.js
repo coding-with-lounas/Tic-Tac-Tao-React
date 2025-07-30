@@ -91,18 +91,19 @@ function calculateWinner(squares){
 
 }
 export default function Game(){
-  const [xIsNext, setXIsNext] = useState(true);
+  // const [xIsNext, setXIsNext] = useState(true);
   const [currentMove,setCurrentMove]=useState(0);
   const [history, setHistory] = useState([Array(9).fill(null)]); // history is array embedded array like [[]]
+  const xIsNext = currentMove % 2 === 0; // we delete useState XisNext
   const currentSquares = history[currentMove];
 
-  // const currentSquare =history[history.length - 1];
+  // const currentSquares =history[history.length - 1];
 // because the history.length give u length of history array and array in js start with index 0
 
   function handlePlay(nextSquares){
     //  setHistory([...history,nextSquare]);
     //  setXIsNext(!xIsNext);
-    const nextHistory= [...history.slice(0,currentMove+1),nextsquares];
+    const nextHistory= [...history.slice(0,currentMove+1),nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
     setXIsNext(!xIsNext);
@@ -130,7 +131,7 @@ export default function Game(){
     <>
       <div className='game'>
         <div className='game-board'>
-          <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay} />
+          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
         </div>
         <div className='game-info'>
          <ol> 
